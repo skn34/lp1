@@ -1,0 +1,85 @@
+# Import libraries
+import numpy as np  # linear algebra
+import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset
+data = pd.read_csv("../input/temperatures-of-india/temperatures.csv")
+df = data
+
+# Display data description and information
+print(data.describe())
+print(data.info())
+
+# Count specific temperature occurrence (optional for exploration)
+count = (data["JAN"] == 22).sum()
+print(count)
+
+# Count zeros in each column
+count = data[data == 0].count()
+print(count)
+
+# Check for null values
+print(data.isnull().sum())
+print(data.isnull().head())
+
+# View data shape and type
+print(data.shape)
+print(type(data))
+
+# Display head and tail of data
+print(data.head())
+print(data.tail())
+
+# Setting up features and labels
+x = data["YEAR"]
+y = data["ANNUAL"]
+
+# Plot data
+plt.plot(x, y, 'o')
+sns.scatterplot(x=x, y=y, data=df)
+
+# Reshape x for training
+x = x.values
+x = x.reshape(117, 1)
+print(x.shape)
+print(type(x))
+
+# Train-test split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+print(f"x Training dataset: {x_train.shape}")
+print(f"y Training dataset: {y_train.shape}")
+print(f"x Test dataset: {x_test.shape}")
+print(f"y Test dataset: {y_test.shape}")
+
+# Build Linear Regression model
+model = LinearRegression()
+model.fit(x_train, y_train)
+
+# Display model parameters
+print(f"Model coefficient (slope): {model.coef_}")
+print(f"Model intercept: {model.intercept_}")
+
+# Predict on test set
+y_pred = model.predict(x_test)
+print(y_pred.shape)
+
+# Plot regression results
+plt.scatter(x_train, y_train, color='blue')
+plt.plot(x_test, y_pred, color='red', linewidth=3)
+plt.title("Temperature vs Year")
+plt.xlabel("Year")
+plt.ylabel("Temperature")
+plt.show()
+
+# Regression plot with Seaborn
+sns.regplot(data=df, x=x_train, y=y_train)
+
+# Evaluate model performance
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+print(f"MSE:  {mean_squared_error(y_test, y_pred)}")
+print(f"MAE:  {mean_absolute_error(y_test, y_pred)}")
+print(f"R-Square:  {r2_score(y_test, y_pred)}")

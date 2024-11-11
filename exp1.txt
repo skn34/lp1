@@ -1,0 +1,53 @@
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+from sklearn.model_selection import train_test_split
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv("C://downloads//Heart.csv")
+
+# a) Find Shape of Data
+df.shape
+
+# b) Find Missing Values
+df.isnull().sum()
+df.count()
+
+# c) Find data type of each column
+df.info()
+df.dtypes
+
+# d) Finding out Zero's
+(df == 0).sum()
+
+# e) Find Mean age of patients
+np.mean(df['Age'])
+df['Age'].mean()
+
+# f) Extract only Age, Sex, ChestPain, RestBP, Chol
+data = df[['Age', 'Sex', 'ChestPain', 'RestBP', 'Chol']]
+
+# Cross validation: Split data into training (75%) and testing (25%)
+train, test = train_test_split(data, test_size=0.25, random_state=1)
+train.shape
+test.shape
+
+# Confusion Matrix for COVID Prediction
+actual = np.concatenate((np.ones(45), np.zeros(450), np.ones(5)))
+predicted = np.concatenate((np.ones(100), np.zeros(400)))
+
+# I. Confusion Matrix
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+
+cm = confusion_matrix(actual, predicted)
+accuracy = accuracy_score(actual, predicted)
+precision = precision_score(actual, predicted)
+recall = recall_score(actual, predicted)
+f1 = f1_score(actual, predicted)
+
+cm, accuracy, precision, recall, f1
+
+from sklearn.metrics import ConfusionMatrixDisplay
+ConfusionMatrixDisplay.from_predictions(actual,predicted)
